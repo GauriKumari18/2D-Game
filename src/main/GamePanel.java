@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 
 import javax.swing.JPanel;
-import javax.swing.plaf.basic.BasicComboBoxUI.KeyHandler;
 
 public class GamePanel extends JPanel  implements Runnable{
     //screen :-
@@ -59,7 +58,8 @@ public class GamePanel extends JPanel  implements Runnable{
         } else if(keyH.leftPressed== true){
             playerX -= playerSpeed;
         }  else if(keyH.rightPressed== true){
-            playerX += playerSpeed;
+            playerX += playerSpeed; 
+        }
     }
     public void paintComponent(java.awt.Graphics g){
         super.paintComponent(g);

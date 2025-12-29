@@ -1,8 +1,9 @@
-package src.main;
+package main;
 
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import entity.Player;
 
 import javax.swing.JPanel;
 
@@ -10,18 +11,20 @@ public class GamePanel extends JPanel  implements Runnable{
     //screen :-{}
     final int oringinalTilesize = 16;  //we are gonna use 16x16 tiles.
     final int scale=3; //scaling the tilesize by 3 times. -> 16x3=48;
-    //final tiles size:-
-    final int tilesize = oringinalTilesize * scale; //48x48
+    //final tiles size:- 
+    //public so we can acccess it from other classes
+    public final int tilesize = oringinalTilesize * scale; //48x48
     //16 horizontal tiles and 12 vertical tiles
     final int maxSreenRow = 16;
-    final int maxScreenCol = 12;
+    final int maxScreenCol = 16;
     final int screeWidth = tilesize * maxScreenCol; //768 pixels
     final int screenHeight = tilesize * maxSreenRow; //576 
 
     //FPS
     int FPS = 60;
-
+    Thread gameThread;
     KeyHandler keyH= new KeyHandler();
+    Player player = new Player(this, keyH);
 
     //Set playesr default position
     int playerX = 250;
@@ -39,7 +42,7 @@ public class GamePanel extends JPanel  implements Runnable{
     }
 
     //Threading
-    Thread gameThread;
+    
     public void startGameThread(){
         gameThread = new Thread(this);
         gameThread.start();
@@ -77,24 +80,14 @@ public class GamePanel extends JPanel  implements Runnable{
         }
     }
     public void update(){
-        if (keyH.upPressed== true) {
-            playerY -= playerSpeed;
-        } else if(keyH.downPressed== true){
-            playerY += playerSpeed;
-        } else if(keyH.leftPressed== true){
-            playerX -= playerSpeed;
-        }  else if(keyH.rightPressed== true){
-            playerX += playerSpeed; 
-        }
+        player.update();
     }
     public void paintComponent(java.awt.Graphics g){
         super.paintComponent(g);
     //Grphics2D to proviude tghe more advanced control over geometry, coordinate transformations, color management. 
         Graphics2D g2 = (Graphics2D)g;
 
-        g2.setColor(Color.white);
-
-        g2.fillRect(playerX, playerY, tilesize, tilesize);
+        player.draw(g2);
         g2.dispose();
     }
         

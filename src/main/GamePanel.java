@@ -7,7 +7,7 @@ import java.awt.Graphics2D;
 import javax.swing.JPanel;
 
 public class GamePanel extends JPanel  implements Runnable{
-    //screen :-
+    //screen :-{}
     final int oringinalTilesize = 16;  //we are gonna use 16x16 tiles.
     final int scale=3; //scaling the tilesize by 3 times. -> 16x3=48;
     //final tiles size:-
@@ -18,11 +18,14 @@ public class GamePanel extends JPanel  implements Runnable{
     final int screeWidth = tilesize * maxScreenCol; //768 pixels
     final int screenHeight = tilesize * maxSreenRow; //576 
 
+    //FPS
+    int FPS = 60;
+
     KeyHandler keyH= new KeyHandler();
 
     //Set playesr default position
-    int playerX = 100;
-    int playerY = 100;
+    int playerX = 250;
+    int playerY = 300;
     int playerSpeed =4;
 
     //constructor
@@ -32,6 +35,7 @@ public class GamePanel extends JPanel  implements Runnable{
         this.setDoubleBuffered(true);
         this.addKeyListener(keyH);
         this.setFocusable(true);
+        
     }
 
     //Threading
@@ -44,10 +48,32 @@ public class GamePanel extends JPanel  implements Runnable{
     @Override
     public void run(){
         while(gameThread != null){
+
+            double drawInterval = 1000000000/FPS; //0.01666 seconds
+            double nextDrawTime = System.nanoTime() + drawInterval;
+
+            
+            // long currentTime = System.nanoTime();
+            // System.out.println("Current Time: " + currentTime);
+
             //Updating the info such as character positions
             update();
             //Drawing the screen again
             repaint();
+            try {
+                double remainingTime = nextDrawTime - System.nanoTime();
+                remainingTime = remainingTime/1000000;
+
+                if(remainingTime < 0){
+                    remainingTime = 0;
+                }
+
+                Thread.sleep((long)remainingTime);
+
+                nextDrawTime += drawInterval;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
     public void update(){

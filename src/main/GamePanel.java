@@ -2,8 +2,10 @@ package main;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import entity.Player;
+import tile.TileManager;
 
 import javax.swing.JPanel;
 
@@ -22,19 +24,16 @@ public class GamePanel extends JPanel  implements Runnable{
 
     //FPS
     int FPS = 60;
+
+    TileManager tileM =  new TileManager(this);
     Thread gameThread;
     KeyHandler keyH= new KeyHandler();
     Player player = new Player(this, keyH);
 
-    //Set playesr default position
-    int playerX = 250;
-    int playerY = 300;
-    int playerSpeed =4;
-
     //constructor
     public GamePanel(){
         this.setPreferredSize(new Dimension(screeWidth, screenHeight));
-        this.setBackground(Color.pink);
+        this.setBackground(Color.pink); 
         this.setDoubleBuffered(true);
         this.addKeyListener(keyH);
         this.setFocusable(true);
@@ -81,11 +80,14 @@ public class GamePanel extends JPanel  implements Runnable{
     }
     public void update(){
         player.update();
+        
     }
     public void paintComponent(java.awt.Graphics g){
         super.paintComponent(g);
     //Grphics2D to proviude tghe more advanced control over geometry, coordinate transformations, color management. 
         Graphics2D g2 = (Graphics2D)g;
+
+        tileM.draw(g2);
 
         player.draw(g2);
         g2.dispose();
